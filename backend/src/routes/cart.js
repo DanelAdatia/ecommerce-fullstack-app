@@ -1,7 +1,13 @@
-const express = require("express");
+// backend/src/routes/cart.js
+const express = require('express');
 const router = express.Router();
 const { addToCart, getCart } = require('../store');
 
+/**
+ * POST /cart/:userId/add
+ * Body: { id, name, price, qty }
+ * Adds an item to the user's in-memory cart (merges qty if same id).
+ */
 router.post('/:userId/add', (req, res) => {
   const { userId } = req.params;
   const { id, name, price, qty } = req.body;
@@ -12,10 +18,14 @@ router.post('/:userId/add', (req, res) => {
   return res.json(cart);
 });
 
-router.get("/:userId", (req, res) => {
-     const {userId} = req.params;
-    const cart = getCart(userId);
-    res.json(cart);
-})
+/**
+ * GET /cart/:userId
+ * Returns the user's cart.
+ */
+router.get('/:userId', (req, res) => {
+  const { userId } = req.params;
+  const cart = getCart(userId);
+  res.json(cart);
+});
 
 module.exports = router;

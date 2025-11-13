@@ -83,6 +83,26 @@ function createOrder(userId, items, total, discountCode, discountAmount) {
   return order;
 }
 
+function calculateTotal(items) {
+  return items.reduce((acc, it) => acc + Number(it.price) * (Number(it.qty) || 1), 0);
+}
+
+function adminStats() {
+  const itemsPurchasedCount = store.orders.reduce(
+    (acc, o) => acc + (o.items ? o.items.reduce((s, i) => s + (i.qty || 1), 0) : 0),
+    0
+  );
+  const totalPurchaseAmount = store.orders.reduce((acc, o) => acc + (o.total || 0), 0);
+  const totalDiscountGiven = store.orders.reduce((acc, o) => acc + (o.discountAmount || 0), 0);
+  return {
+    itemsPurchasedCount,
+    totalPurchaseAmount,
+    discountCodes: store.discountCodes,
+    totalDiscountGiven,
+  };
+}
+
+// ensure module.exports exports everything needed
 module.exports = {
   store,
   getCart,
@@ -93,4 +113,6 @@ module.exports = {
   findDiscount,
   markDiscountUsed,
   createOrder,
+  calculateTotal,
+  adminStats
 };
